@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>For You, Princess</title>
+  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="stage">
+    <section class="scene">
+      <div class="envelope" id="envelope">
+        <div class="flap"></div>
+        <div class="body"></div>
+
+        <button id="seal" class="seal" aria-label="Open letter">
+          <span class="seal-heart">❤️</span>
+        </button>
+
+        <!-- parchment that will slide up -->
+        <div class="parchment" id="parchment" aria-hidden="true">
+          <div class="parchment-content">
+            <p id="message" class="message"></p>
+            <div id="choices" class="choices hidden" aria-hidden="true">
+              <button class="choice-btn" data-choice="yes">Yes 💖</button>
+              <button class="choice-btn" data-choice="no">No 😢</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- small helper text -->
+      <div class="hint">Tap the heart seal to open</div>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
