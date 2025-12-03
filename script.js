@@ -1,7 +1,7 @@
 // Elements
 const envelope = document.getElementById('envelope');
 const seal = document.getElementById('seal');
-const parchment = document.getElementById('parchment');
+const parchmentWrap = document.getElementById('parchmentWrap');
 const messageElement = document.getElementById('message');
 const choicesContainer = document.getElementById('choices');
 
@@ -19,10 +19,11 @@ let currentMessage = '';
 let isTyping = false;
 let opened = false;
 
-// stable quill-style typewriter (no overlaps)
+// stable typewriter
 function typeWriter(text, callback = null) {
   if (isTyping) return;
   isTyping = true;
+
   const chars = Array.from(text);
   let i = 0;
   messageElement.innerHTML = '';
@@ -32,7 +33,7 @@ function typeWriter(text, callback = null) {
       const ch = chars[i];
       messageElement.innerHTML += (ch === '\n') ? '<br>' : ch;
       i++;
-      const delay = 18 + Math.random() * 60; // natural quill feel
+      const delay = 18 + Math.random() * 50;
       setTimeout(step, delay);
     } else {
       isTyping = false;
@@ -42,78 +43,93 @@ function typeWriter(text, callback = null) {
   step();
 }
 
-// open envelope animation and reveal parchment + type
+// open letter sequence
 function openLetter() {
-  if (opened) return;
+  if (opened || isTyping) return;
   opened = true;
 
-  // animate seal "breaking"
+  // break seal (fade out)
   seal.classList.add('broken');
-  // open flap + show parchment by adding open class
-  envelope.classList.add('open');
 
-  // pick a random message
-  currentMessage = messages[Math.floor(Math.random() * messages.length)];
-
-  // start typing after short delay so the paper scene feels natural
+  // after a short delay lift the flap and slide up parchment
   setTimeout(() => {
-    parchment.setAttribute('aria-hidden', 'false');
-    typeWriter(currentMessage, () => {
-      // reveal choices once typing finishes
-      choicesContainer.classList.remove('hidden');
-    });
-  }, 650);
+    envelope.classList.add('open');
+
+    // reveal parchment wrapper (smooth opacity)
+    parchmentWrap.setAttribute('aria-hidden', 'false');
+
+    // pick random message
+    currentMessage = messages[Math.floor(Math.random() * messages.length)];
+
+    // type after slight delay so animation feels natural
+    setTimeout(() => {
+      typeWriter(currentMessage, () => {
+        choicesContainer.classList.remove('hidden');
+        choicesContainer.setAttribute('aria-hidden', 'false');
+      });
+    }, 460);
+  }, 280);
+
+  // fully hide the envelope visually after open (so it "disappears")
+  setTimeout(() => {
+    envelope.classList.add('hidden');
+  }, 900);
 }
 
-// reset to unopened state (used when retry)
+// reset (used on retry)
 function resetToClosed(callback = null) {
   // hide choices, clear message
   choicesContainer.classList.add('hidden');
+  choicesContainer.setAttribute('aria-hidden', 'true');
   messageElement.innerHTML = '';
 
-  // reverse animations
+  // show envelope again
+  envelope.classList.remove('hidden');
   envelope.classList.remove('open');
-  // bring back seal (brief delay for aesthetic)
+  envelope.setAttribute('aria-hidden', 'false');
+
+  // restore seal (small delay for aesthetics)
   setTimeout(() => {
     seal.classList.remove('broken');
     opened = false;
     if (callback) callback();
-  }, 450);
+  }, 420);
 }
 
-// Attach click to seal + keyboard accessibility (Enter/Space)
-seal.classList.add('animate'); // start heartbeat
+// attach seal heartbeat and click
+seal.classList.add('animate');
 seal.addEventListener('click', openLetter);
 seal.addEventListener('keydown', (e) => {
   if (e.key === 'Enter' || e.key === ' ') openLetter();
 });
 
-// Event delegation for choice buttons
+// event delegation for choices
 choicesContainer.addEventListener('click', (e) => {
   if (!e.target.classList.contains('choice-btn') || isTyping) return;
   const choice = e.target.dataset.choice;
+
+  // hide choices while we respond
   choicesContainer.classList.add('hidden');
+  choicesContainer.setAttribute('aria-hidden', 'true');
 
   if (choice === 'yes') {
-    // heartfelt confirmation
     typeWriter("Yay! 💖 I’m so happy. I promise I’ll do my best to make you smile every day. 😍");
   } else if (choice === 'no') {
-    // gentle response, then show retry/exit
-    typeWriter("Aw… 😢 That's okay. If you'd like, you can try again or maybe later.",  () => {
-      // give two options
+    typeWriter("Aw… 😢 That's okay. If you'd like, you can try again or maybe later.", () => {
+      // show retry/exit
       choicesContainer.innerHTML = `
         <button class="choice-btn" data-choice="retry">Try Again 🔄</button>
         <button class="choice-btn" data-choice="exit">Maybe Later ❌</button>
       `;
       choicesContainer.classList.remove('hidden');
+      choicesContainer.setAttribute('aria-hidden', 'false');
     });
   } else if (choice === 'retry') {
-    // close, pick new message, open again
+    // reset and reopen with new message
     resetToClosed(() => {
-      // tiny delay then reopen
       setTimeout(() => {
         openLetter();
-        // restore original yes/no markup for next time (keeps markup clean)
+        // restore original yes/no buttons markup
         choicesContainer.innerHTML = `
           <button class="choice-btn" data-choice="yes">Yes 💖</button>
           <button class="choice-btn" data-choice="no">No 😢</button>
