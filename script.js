@@ -13,23 +13,21 @@ const messages = [
   "Princess 👑, I’ve wanted to tell you for a while: you make me happier just by being you. I cherish our little moments, like that movie night. I would truly be honored if I could be your boyfriend this year and see where this takes us. ❤️💙"
 ];
 
-let currentMessage = '';
-let isTyping = false;
-let opened = false;
+let isTyping=false;
+let opened=false;
 
 function typeWriter(text, callback=null){
   if(isTyping) return;
   isTyping=true;
-  const chars=Array.from(text); let i=0;
   messageElement.innerHTML='';
   signatureElement.classList.add('hidden');
-
+  const chars=Array.from(text);
+  let i=0;
   function step(){
     if(i<chars.length){
-      const ch=chars[i];
-      messageElement.innerHTML += (ch==='\n'?'<br>':ch);
+      messageElement.innerHTML += (chars[i]==='\n'?'<br>':chars[i]);
       i++;
-      setTimeout(step, 18+Math.random()*50);
+      setTimeout(step,18+Math.random()*50);
     } else {
       isTyping=false;
       signatureElement.classList.remove('hidden');
@@ -42,20 +40,15 @@ function typeWriter(text, callback=null){
 function openLetter(){
   if(opened||isTyping) return;
   opened=true;
-
-  // fade envelope
   envelope.classList.add('hidden');
   seal.classList.add('broken');
-
-  // show letter
   setTimeout(()=>{
     letterWrap.classList.add('active');
-    currentMessage = messages[Math.floor(Math.random()*messages.length)];
-    setTimeout(()=>typeWriter(currentMessage, ()=>choicesContainer.classList.remove('hidden')),300);
+    const msg = messages[Math.floor(Math.random()*messages.length)];
+    setTimeout(()=>typeWriter(msg,()=>choicesContainer.classList.remove('hidden')),300);
   },400);
 }
 
-// reset letter for retry
 function resetLetter(callback=null){
   choicesContainer.classList.add('hidden');
   messageElement.innerHTML='';
@@ -78,3 +71,19 @@ choicesContainer.addEventListener('click',(e)=>{
 
   if(choice==='yes'){
     typeWriter("Yay! 💖 I’m so happy. I promise I’ll do my best to make you smile every day. 😍");
+  } else if(choice==='no'){
+    typeWriter("Aw… 😢 That's okay. If you'd like, you can try again or maybe later.",()=>{
+      choicesContainer.innerHTML=`
+        <button class="choice-btn" data-choice="retry">Try Again 🔄</button>
+        <button class="choice-btn" data-choice="exit">Maybe Later ❌</button>`;
+      choicesContainer.classList.remove('hidden');
+    });
+  } else if(choice==='retry'){
+    resetLetter(()=>{setTimeout(openLetter,250); choicesContainer.innerHTML=`
+      <button class="choice-btn" data-choice="yes">Yes 💖</button>
+      <button class="choice-btn" data-choice="no">No 😢</button>`;
+    });
+  } else if(choice==='exit'){
+    typeWriter("Okay… maybe another time. Thank you for reading. 💙");
+  }
+});
