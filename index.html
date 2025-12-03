@@ -9,23 +9,24 @@
 </head>
 <body>
 <main class="stage">
-  <section class="scene" aria-label="Romantic letter scene">
+  <section class="scene">
 
     <!-- Envelope -->
-    <div class="envelope" id="envelope" aria-hidden="false">
-      <div class="envelope-body"></div>
+    <div class="envelope" id="envelope">
+      <div class="flap"></div>
+      <div class="body"></div>
       <button id="seal" class="seal" aria-label="Open the sealed letter">
         <span class="seal-heart">❤️</span>
       </button>
     </div>
 
     <!-- Letter -->
-    <div class="letter-wrap" id="letterWrap" aria-hidden="true">
+    <div class="letter-wrap" id="letterWrap">
       <div class="letter">
         <div class="letter-content">
           <p id="message" class="message"></p>
           <p id="signature" class="signature hidden">— Ethan Goh</p>
-          <div id="choices" class="choices hidden" aria-hidden="true">
+          <div id="choices" class="choices hidden">
             <button class="choice-btn" data-choice="yes">Yes 💖</button>
             <button class="choice-btn" data-choice="no">No 😢</button>
           </div>
