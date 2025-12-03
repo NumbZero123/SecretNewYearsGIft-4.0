@@ -1,46 +1,42 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>For You, Princess</title>
-
-  <!-- Fonts: Playfair for readable romantic serif, Great Vibes only for tiny accents -->
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Great+Vibes&display=swap" rel="stylesheet">
-
-  <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>For You, Princess</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <main class="stage">
-    <section class="scene" aria-label="Romantic letter scene">
-      <!-- Envelope (visible first) -->
-      <div class="envelope" id="envelope" aria-hidden="false">
-        <div class="flap"></div>
-        <div class="body"></div>
+<main class="stage">
+  <section class="scene" aria-label="Romantic letter scene">
 
-        <button id="seal" class="seal" aria-label="Open the sealed letter">
-          <span class="seal-heart">❤️</span>
-        </button>
-      </div>
+    <!-- Envelope -->
+    <div class="envelope" id="envelope" aria-hidden="false">
+      <div class="envelope-body"></div>
+      <button id="seal" class="seal" aria-label="Open the sealed letter">
+        <span class="seal-heart">❤️</span>
+      </button>
+    </div>
 
-      <!-- Parchment (hidden until opened) -->
-      <div class="parchment-wrap" id="parchmentWrap" aria-hidden="true">
-        <div class="parchment">
-          <div class="parchment-content">
-            <p id="message" class="message"></p>
-
-            <div id="choices" class="choices hidden" aria-hidden="true">
-              <button class="choice-btn" data-choice="yes">Yes 💖</button>
-              <button class="choice-btn" data-choice="no">No 😢</button>
-            </div>
+    <!-- Letter -->
+    <div class="letter-wrap" id="letterWrap" aria-hidden="true">
+      <div class="letter">
+        <div class="letter-content">
+          <p id="message" class="message"></p>
+          <p id="signature" class="signature hidden">— Ethan Goh</p>
+          <div id="choices" class="choices hidden" aria-hidden="true">
+            <button class="choice-btn" data-choice="yes">Yes 💖</button>
+            <button class="choice-btn" data-choice="no">No 😢</button>
           </div>
         </div>
       </div>
+    </div>
 
-      <div class="hint">Tap the heart seal to open</div>
-    </section>
-  </main>
+    <div class="hint">Tap the heart seal to open</div>
+  </section>
+</main>
 
-  <script src="script.js"></script>
+<script src="script.js"></script>
 </body>
 </html>
