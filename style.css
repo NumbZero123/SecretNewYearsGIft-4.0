@@ -1,0 +1,111 @@
+/* --- Base / layout --- */
+:root{
+  --crimson: #8B0000;
+  --parchment: #fdf0d5;
+  --ink: #4b0000;
+  --seal-dark: #7a0f16;
+  --accent: #b35b4f;
+}
+
+*{box-sizing:border-box}
+body,html{height:100%;margin:0;font-family: 'Playfair Display', serif;background:var(--crimson);-webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;}
+.stage{height:100%;display:flex;align-items:center;justify-content:center;padding:24px;}
+.scene{display:flex;flex-direction:column;align-items:center;gap:18px;}
+
+/* --- Envelope container --- */
+.envelope{position:relative;width:420px;height:280px;display:flex;align-items:center;justify-content:center;transform-style:preserve-3d;perspective:800px;}
+.envelope .body{
+  position:absolute;left:0;right:0;top:40px;bottom:20px;margin:auto;width:360px;height:200px;background:linear-gradient(180deg,#fbf0d9,#f4e6c8);border-radius:8px;border:3px solid var(--accent);
+  box-shadow: 0 8px 30px rgba(0,0,0,0.45), inset 0 2px 8px rgba(0,0,0,0.04);
+  overflow:hidden;
+  transform-origin:top center;
+}
+
+/* flap (folded top) */
+.envelope .flap{
+  position:absolute;top:6px;left:0;right:0;margin:auto;width:380px;height:110px;
+  background: linear-gradient(180deg,#f6e7c8,#e9d7b0);
+  border-radius:8px;
+  border:3px solid var(--accent);
+  transform-origin:top center;
+  transform: translateY(-10px) rotateX(0deg);
+  transition: transform 700ms cubic-bezier(.2,.9,.2,1);
+  box-shadow: 0 14px 30px rgba(0,0,0,0.4);
+}
+
+/* seal button */
+.seal{
+  position:absolute; left:50%; top:92px; transform:translateX(-50%); width:82px; height:82px;
+  background: radial-gradient(circle at 30% 30%, #ff6b6b, #dc143c 35%, var(--seal-dark) 70%);
+  border-radius:50%; border:3px solid rgba(0,0,0,0.15); cursor:pointer;
+  display:flex;align-items:center;justify-content:center; z-index:6;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.45);
+  transition: transform 250ms ease, box-shadow 250ms ease, opacity 300ms ease;
+}
+
+/* heartbeat animation */
+@keyframes seal-beat {
+  0%,100%{ transform:translateX(-50%) scale(1); }
+  50%{ transform:translateX(-50%) scale(1.08); }
+}
+.seal .seal-heart{font-size:36px; filter:drop-shadow(0 0 6px rgba(255,90,90,0.8));}
+.seal.animate { animation: seal-beat 1000ms infinite ease-in-out; }
+.seal:hover { animation-duration:420ms; transform:translateX(-50%) scale(1.06); box-shadow:0 10px 26px rgba(0,0,0,0.5); }
+
+/* when opened: flap rotates up */
+.envelope.open .flap{ transform: translateY(-60px) rotateX(55deg); transition: transform 700ms cubic-bezier(.2,.9,.2,1); }
+
+/* seal break/fade */
+.seal.broken{ opacity:0; transform:translateX(-50%) scale(0.9) translateY(10px); pointer-events:none; }
+
+/* --- parchment (paper that slides up) --- */
+.parchment{
+  position:absolute; left:50%; bottom:28px; transform:translateX(-50%) translateY(140%); width:330px;height:220px;
+  background:linear-gradient(180deg,#fef8e8,#f7ecd0);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.35);
+  border:3px solid rgba(179,91,79,0.9);
+  border-radius:6px;
+  overflow:hidden;
+  transition: transform 700ms cubic-bezier(.2,.9,.2,1), opacity 300ms ease;
+  z-index:5;
+}
+
+/* shown state: slide up */
+.envelope.open .parchment{ transform:translateX(-50%) translateY(-10%); }
+
+/* paper inner content */
+.parchment-content{ padding:28px 26px; font-family: 'Great Vibes', cursive; color:var(--ink); font-size:1.15rem; line-height:1.6; min-height:140px; display:flex;flex-direction:column; justify-content:space-between; }
+
+/* give parchment a subtle stained border texture */
+.parchment::before{
+  content:""; position:absolute;inset:0; background:
+  radial-gradient(600px 200px at 10% 10%, rgba(200,150,100,0.06), transparent 10%),
+  radial-gradient(500px 160px at 90% 80%, rgba(200,150,100,0.04), transparent 12%);
+  pointer-events:none;
+}
+
+/* message area */
+.message{ margin:0; white-space:pre-wrap; word-break:break-word; min-height:100px; }
+
+/* choices/buttons */
+.choices{ display:flex; justify-content:center; gap:10px; margin-top:14px; }
+.choices.hidden{ display:none; }
+
+.choice-btn{
+  background: linear-gradient(90deg,#dc143c,#ff6b6b);
+  color:#fff;border:none;padding:10px 16px;border-radius:10px;font-size:1rem;cursor:pointer;
+  box-shadow:0 6px 18px rgba(0,0,0,0.25); transition:transform .15s ease;
+}
+.choice-btn:active{ transform:scale(.98) }
+
+/* hint */
+.hint{ color: #fae9d8; font-family: 'Playfair Display', serif; opacity:0.9; font-size:0.95rem; }
+
+/* small responsive tweak */
+@media (max-width:420px){
+  .envelope{width:320px;height:220px}
+  .envelope .body{width:300px;height:170px}
+  .envelope .flap{width:300px;height:100px}
+  .parchment{width:280px;height:200px}
+  .parchment-content{padding:20px}
+}
