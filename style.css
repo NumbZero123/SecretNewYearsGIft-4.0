@@ -39,7 +39,6 @@ body{
   border-left: 210px solid transparent;
   border-right: 210px solid transparent;
   border-bottom: 90px solid var(--letter-bg);
-  border-bottom-color: var(--letter-bg);
   box-shadow:0 8px 20px rgba(0,0,0,0.3);
   border-radius:4px;
   z-index:2;
@@ -60,12 +59,19 @@ body{
 
 /* Seal */
 .seal{
-  position:absolute; top:60px; left:50%; transform:translateX(-50%);
-  width:80px; height:80px; border-radius:50%;
+  position:absolute;
+  top:70px;
+  left:50%;
+  transform:translateX(-50%);
+  z-index:3;
+  width:80px;
+  height:80px;
+  border-radius:50%;
   border:2px solid rgba(0,0,0,0.1);
   background: radial-gradient(circle at 30% 30%, #ff7b7b, #dc143c 35%, var(--seal-dark) 75%);
   display:flex;align-items:center;justify-content:center;
-  cursor:pointer; box-shadow:0 6px 20px rgba(0,0,0,0.4);
+  cursor:pointer;
+  box-shadow:0 6px 20px rgba(0,0,0,0.4);
   transition: transform 0.25s ease, box-shadow 0.25s ease, opacity 0.3s ease;
 }
 @keyframes seal-beat{
@@ -126,6 +132,6 @@ body{
 /* Responsive */
 @media (max-width:640px){
   .flap{border-left:42vw solid transparent; border-right:42vw solid transparent; border-bottom:18vw solid var(--letter-bg);}
-  .seal{width:72px;height:72px;top:48px;}
+  .seal{width:90px;height:90px;top:60px;}
   .letter-content{font-size:1rem;padding:20px;}
 }
